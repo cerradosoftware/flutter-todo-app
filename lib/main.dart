@@ -35,6 +35,38 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var newTaskController = new TextEditingController();
 
+  _showDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Nova tarefa"),
+            content: TextFormField(
+              controller: newTaskController,
+              keyboardType: TextInputType.text,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text('ADD'),
+                onPressed: () {
+                  add();
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   void add() {
     final text = newTaskController.text;
     if (text.isEmpty) return;
@@ -77,19 +109,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TextFormField(
-          controller: newTaskController,
-          keyboardType: TextInputType.text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
-          decoration: InputDecoration(
-              labelText: "Nova Tarefa",
-              labelStyle: TextStyle(color: Colors.white)),
-        ),
-      ),
+      appBar: AppBar(title: Text("TODO List")),
       body: ListView.builder(
         itemCount: widget.items.length,
         itemBuilder: (BuildContext context, int index) {
@@ -116,7 +136,9 @@ class _HomeState extends State<Home> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: add,
+        onPressed: () {
+          _showDialog(context);
+        },
         child: Icon(
           Icons.add,
         ),
